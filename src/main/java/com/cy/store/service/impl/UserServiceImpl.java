@@ -3,10 +3,7 @@ package com.cy.store.service.impl;
 import com.cy.store.entity.User;
 import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.IUserService;
-import com.cy.store.service.ex.InsertException;
-import com.cy.store.service.ex.PasswordNotMatchException;
-import com.cy.store.service.ex.UserNotFoundException;
-import com.cy.store.service.ex.UsernameDuplicatedException;
+import com.cy.store.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -82,7 +79,62 @@ public class UserServiceImpl implements IUserService {
         return user;
     }
 
-    // Specify encryption rule for md5
+    @Override
+    public void changePassword(Integer uid, String username, String oldPassword, String newPassword) {
+        User result = userMapper.findByUid(uid);
+        if(result == null || result.getIsDelete() == 1) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        // Authentication
+        String oldMd5Password = getMD5Password(oldPassword, result.getSalt());
+        if(!result.getPassword().equals(oldMd5Password)) {
+            throw new PasswordNotMatchException("Wrong password");
+        }
+
+        // Update password
+        String newMd5Password = getMD5Password(newPassword, result.getSalt());
+        Integer rows = userMapper.updatePasswordByUid(uid, newMd5Password, username, new Date());
+        if(rows != 1) {
+            throw new UpdateException("Error occurred when updating password");
+        }
+    }
+
+    @Override
+    public User getByUid(Integer uid) {
+        User result = userMapper.findByUid(uid);
+        if(result == null || result.getIsDelete() == 1) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        // extract properties needed by the front-end and pass them
+        // as a new user object
+        User user = new User();
+        user.setUsername(result.getUsername());
+        user.setPhone(result.getPhone());
+        user.setEmail(result.getEmail());
+        user.setGender(result.getGender());
+
+        return result;
+    }
+
+    @Override
+    public void changeInfo(Integer uid, String username, User user) {
+        User result = userMapper.findByUid(uid);
+        if(result == null || result.getIsDelete() == 1) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setUid(uid);
+        user.setModifiedUser(username);
+        user.setModifiedTime(new Date());
+
+        Integer rows = userMapper.updateInfoByUid(user);
+        if(rows != 1) {
+            throw new UpdateException("Error occurred while updating user info");
+        }
+    }
+
+    // Encrypt password using md5
     private String getMD5Password(String password, String salt) {
         for(int i = 0; i < 3; i++)
             password = DigestUtils.md5DigestAsHex((salt+password+salt).getBytes()).toUpperCase();
