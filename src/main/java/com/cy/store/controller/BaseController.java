@@ -1,5 +1,6 @@
 package com.cy.store.controller;
 
+import com.cy.store.controller.ex.*;
 import com.cy.store.service.ex.*;
 import com.cy.store.util.JsonResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,25 +11,37 @@ import javax.servlet.http.HttpSession;
 public class BaseController {
     public static final int success = 200;
 
-    @ExceptionHandler(ServiceException.class) // Handles exceptions for current class
+    @ExceptionHandler({ServiceException.class, FileUploadException.class}) // Handles exceptions for current class
     public JsonResult<Void> handleException(Throwable e) {
         JsonResult<Void> result = new JsonResult<>();
 
         if (e instanceof UsernameDuplicatedException) {
             result.setState(4000);
-            result.setMessage("Exception: username already taken");
+            result.setMessage("Username already taken");
         } else if (e instanceof InsertException) {
             result.setState(5000);
-            result.setMessage("Exception: error occurred during insertion");
+            result.setMessage("Error occurred during insertion");
         } else if (e instanceof UserNotFoundException) {
             result.setState(5001);
-            result.setMessage("Exception: user not found");
+            result.setMessage("User not found");
         } else if (e instanceof PasswordNotMatchException) {
             result.setState(5002);
-            result.setMessage("Exception: wrong password");
+            result.setMessage("Wrong password");
         } else if (e instanceof UpdateException) {
             result.setState(5003);
-            result.setMessage("Exception: error occurred during password update");
+            result.setMessage("Error occurred during password update");
+        } else if (e instanceof AddressCountLimitException) {
+            result.setState(5004);
+        } else if (e instanceof FileEmptyException) {
+            result.setState(6000);
+        } else if (e instanceof FileSizeException) {
+            result.setState(6001);
+        } else if (e instanceof FileTypeException) {
+            result.setState(6002);
+        } else if (e instanceof FileStateException) {
+            result.setState(6003);
+        } else if (e instanceof FileUploadIOException) {
+            result.setState(6004);
         }
         return result;
     }
