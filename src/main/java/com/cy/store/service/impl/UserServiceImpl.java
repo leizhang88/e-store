@@ -134,6 +134,19 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Override
+    public void changeAvatar(Integer uid, String avatar, String username) {
+        User result = userMapper.findByUid(uid);
+        if(result == null || result.getIsDelete() == 1) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        Integer rows = userMapper.updateAvatarByUid(uid, avatar, username, new Date());
+        if(rows != 1) {
+            throw new UpdateException("Error occurred while updating user avatar");
+        }
+    }
+
     // Encrypt password using md5
     private String getMD5Password(String password, String salt) {
         for(int i = 0; i < 3; i++)

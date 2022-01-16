@@ -156,6 +156,9 @@
 						// jump to page: index.html
 						// need to specify relative path
 						location.href = "./index.html";
+
+						// save user avatar in cookie
+						$.cookie("avatar", json.data.avatar, {expire: 7});
 					} else {
 						alert("Fail to login");
 					}

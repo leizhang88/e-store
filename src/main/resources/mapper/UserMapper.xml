@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace: directory of the mapper interface-->
+<mapper namespace="com.cy.store.mapper.UserMapper">
+
+<!--    resultMap is needed if table columns and class properties are named differently-->
+<!--
+    type: entity class the results are mapped to
+-->
+    <resultMap id="UserEntityMap" type="com.cy.store.entity.User">
+<!--        result: map rules where column is table field and property is class property
+            Note: the primary key has to be mapped!
+-->
+        <result column="uid" property="uid"></result>
+        <result column="is_delete" property="isDelete"></result>
+        <result column="created_user" property="createdUser"></result>
+        <result column="created_time" property="createdTime"></result>
+        <result column="modified_user" property="modifiedUser"></result>
+        <result column="modified_time" property="modifiedTime"></result>
+    </resultMap>
+
+<!--    id: name of method in the mapper interface-->
+<!--    no semicolon allowed at the end of sql statement-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="uid">--
+        INSERT INTO t_user (
+            username, password, salt, phone, email, gender, avatar, is_delete,
+            created_user, created_time, modified_user, modified_time
+        ) VALUES (
+            #{username}, #{password}, #{salt}, #{phone}, #{email}, #{gender}, #{avatar}, #{isDelete},
+            #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime}
+        )
+    </insert>
+
+    <select id="findByUsername" resultMap="UserEntityMap">
+        SELECT * FROM t_user WHERE username=#{username}
+    </select>
+
+    <update id="updatePasswordByUid">
+        UPDATE t_user SET
+            password=#{password}, modified_user=#{modifiedUser}, modified_time=#{modifiedTime}
+        WHERE uid=#{uid}
+    </update>
+
+    <select id="findByUid" resultMap="UserEntityMap">
+        SELECT * FROM t_user WHERE uid=#{uid}
+    </select>
+
+    <update id="updateInfoByUid">
+        UPDATE t_user SET
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="email!=null">email=#{email},</if>
+            <if test="gender!=null">gender=#{gender},</if>
+            modified_user=#{modifiedUser},
+            modified_time=#{modifiedTime}
+        WHERE uid=#{uid}
+    </update>
+
+    <update id="updateAvatarByUid">
+        UPDATE t_user SET
+            avatar=#{avatar},
+            modified_user=#{modifiedUser},
+            modified_time=#{modifiedTime}
+        WHERE uid=#{uid}
+    </update>
+</mapper>
