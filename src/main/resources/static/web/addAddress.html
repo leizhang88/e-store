@@ -287,6 +287,26 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
+		<script type="text/javascript">
+			$("#btn-add-new-address").click(function () {
+				$.ajax({
+					url: "/addresses/add_new_address",
+					type: "POST",
+					data: $("#form-add-new-address").serialize(),
+					dataType: "json",
+					success: function (json) {
+						if(json.state == 200) {
+							alert("Address added successfully");
+						} else {
+							alert("Fail to add address");
+						}
+					},
+					error: function (xhr) {
+						alert("Error occurred while adding address" + xhr.message);
+					}
+				});
+			});
+		</script>
 	</body>
 
 </html>
