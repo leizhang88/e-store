@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AddressServiceImpl implements IAddressService {
@@ -50,5 +51,25 @@ public class AddressServiceImpl implements IAddressService {
         if(rows != 1) {
             throw new InsertException("Error occurred when inserting new address");
         }
+    }
+
+    @Override
+    public List<Address> getByUid(Integer uid) {
+        List<Address> list = addressMapper.findByUid(uid);
+        // Set unwanted properties as null to boost server performance
+        for(Address address : list) {
+            address.setAid(null);
+            address.setUid(null);
+            address.setProvinceCode(null);
+            address.setCityCode(null);
+            address.setAreaCode(null);
+            address.setZip(null);
+            address.setTel(null);
+            address.setCreatedTime(null);
+            address.setCreatedUser(null);
+            address.setModifiedTime(null);
+            address.setModifiedUser(null);
+        }
+        return list;
     }
 }
