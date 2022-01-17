@@ -41,7 +41,7 @@ public class BaseController {
             result.setMessage("Access denied");
         } else if (e instanceof DeleteException) {
             result.setState(5007);
-            result.setMessage("Eerror occurred while deleting address");
+            result.setMessage("Error occurred while deleting address");
         } else if (e instanceof FileEmptyException) {
             result.setState(6000);
             result.setMessage("Empty file");

@@ -9,7 +9,7 @@
         ORDER BY code ASC
     </select>
 
-    <select id="findByCode" resultType="java.lang.String">
+    <select id="findNameByCode" resultType="java.lang.String">
         SELECT name FROM t_dict_district WHERE code=#{code}
     </select>
 </mapper>
