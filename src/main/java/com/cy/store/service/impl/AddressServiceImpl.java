@@ -3,6 +3,7 @@ package com.cy.store.service.impl;
 import com.cy.store.entity.Address;
 import com.cy.store.mapper.AddressMapper;
 import com.cy.store.service.IAddressService;
+import com.cy.store.service.IDistrictService;
 import com.cy.store.service.ex.AddressCountLimitException;
 import com.cy.store.service.ex.InsertException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class AddressServiceImpl implements IAddressService {
     @Autowired
     AddressMapper addressMapper;
 
+    @Autowired
+    private IDistrictService districtService;
+
     @Value("${user.address.max-count}") // Read constant from property file
     private Integer maxCount;
 
@@ -27,6 +31,13 @@ public class AddressServiceImpl implements IAddressService {
         if(count >= maxCount) {
             throw new AddressCountLimitException("Number of user address exceeds limit");
         }
+
+        String provinceName = districtService.getNameByCode(address.getProvinceCode());
+        String cityName = districtService.getNameByCode(address.getCityCode());
+        String areaName = districtService.getNameByCode(address.getAreaCode());
+        address.setProvinceName(provinceName);
+        address.setCityName(cityName);
+        address.setAreaName(areaName);
 
         address.setUid(uid);
         address.setIsDefault(count == 0 ? 1 : 0);
