@@ -42,6 +42,9 @@ public class BaseController {
         } else if (e instanceof DeleteException) {
             result.setState(5007);
             result.setMessage("Error occurred while deleting address");
+        } else if (e instanceof ProductNotFoundException) {
+            result.setState(5008);
+            result.setMessage("Product does not exist");
         } else if (e instanceof FileEmptyException) {
             result.setState(6000);
             result.setMessage("Empty file");
