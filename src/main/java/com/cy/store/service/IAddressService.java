@@ -16,4 +16,12 @@ public interface IAddressService {
      * @param username The user who modifies
      */
     void setDefault(Integer aid, Integer uid, String username);
+
+    /**
+     * Delete address by aid of user uid
+     * @param aid
+     * @param uid
+     * @param username The user who does the job
+     */
+    void delete(Integer aid, Integer uid, String username);
 }

@@ -32,20 +32,31 @@ public class BaseController {
             result.setMessage("Error occurred during password update");
         } else if (e instanceof AddressCountLimitException) {
             result.setState(5004);
+            result.setMessage("Address number exceeds limit");
         } else if (e instanceof AddressNotFoundException) {
             result.setState(5005);
+            result.setMessage("Address does not exist");
         } else if (e instanceof AccessDeniedException) {
             result.setState(5006);
+            result.setMessage("Access denied");
+        } else if (e instanceof DeleteException) {
+            result.setState(5007);
+            result.setMessage("Eerror occurred while deleting address");
         } else if (e instanceof FileEmptyException) {
             result.setState(6000);
+            result.setMessage("Empty file");
         } else if (e instanceof FileSizeException) {
             result.setState(6001);
+            result.setMessage("File size exceeds limit");
         } else if (e instanceof FileTypeException) {
             result.setState(6002);
+            result.setMessage("File type not supported");
         } else if (e instanceof FileStateException) {
             result.setState(6003);
+            result.setMessage("File state error");
         } else if (e instanceof FileUploadIOException) {
             result.setState(6004);
+            result.setMessage("Error occurred while uploading file");
         }
         return result;
     }

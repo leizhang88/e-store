@@ -93,4 +93,32 @@ public class AddressServiceImpl implements IAddressService {
             throw new UpdateException("Error occurred when updating address");
         }
     }
+
+    @Override
+    public void delete(Integer aid, Integer uid, String username) {
+        Address result = addressMapper.findByAid(aid);
+        if(result == null) {
+            throw new AddressNotFoundException("Address not exists");
+        }
+
+        if(result.getUid() != uid) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        Integer rows = addressMapper.deleteByAid(aid);
+        if(rows != 1) {
+            throw new DeleteException();
+        }
+
+        Integer count = addressMapper.countByUid(uid);
+        if(count == 0) return;
+
+        if(result.getIsDefault() == 1) {
+            Address address = addressMapper.findLastModified(uid);
+            rows = addressMapper.updateDefaultByAid(address.getAid(), username, new Date());
+            if(rows != 1) {
+                throw new UpdateException();
+            }
+        }
+    }
 }

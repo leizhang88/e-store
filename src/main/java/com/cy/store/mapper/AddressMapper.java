@@ -31,4 +31,18 @@ public interface AddressMapper {
             @Param("aid") Integer aid,
             @Param("modifiedUser") String modifiedUser,
             @Param("modifiedTime") Date modifiedTime);
+
+    /**
+     * Delete address by aid
+     * @param aid
+     * @return
+     */
+    Integer deleteByAid(Integer aid);
+
+    /**
+     * Find the lastly modified address of user
+     * @param uid
+     * @return
+     */
+    Address findLastModified(Integer uid);
 }
