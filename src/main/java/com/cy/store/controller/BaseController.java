@@ -32,6 +32,10 @@ public class BaseController {
             result.setMessage("Error occurred during password update");
         } else if (e instanceof AddressCountLimitException) {
             result.setState(5004);
+        } else if (e instanceof AddressNotFoundException) {
+            result.setState(5005);
+        } else if (e instanceof AccessDeniedException) {
+            result.setState(5006);
         } else if (e instanceof FileEmptyException) {
             result.setState(6000);
         } else if (e instanceof FileSizeException) {

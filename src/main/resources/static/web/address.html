@@ -291,12 +291,13 @@
 									'<td>#{phone}</td>\n' +
 									'<td><a class="btn btn-xs btn-info"><span class="fa fa-edit"></span> 修改</a></td>\n' +
 									'<td><a class="btn btn-xs add-del btn-info"><span class="fa fa-trash-o"></span> 删除</a></td>\n' +
-									'<td><a class="btn btn-xs add-def btn-default">设为默认</a></td>\n' +
+									'<td><a onclick="setDefault(#{aid})" class="btn btn-xs add-def btn-default">设为默认</a></td>\n' +
 									'</tr>';
 							tr = tr.replace(/#{tag}/g, list[i].tag);
 							tr = tr.replace(/#{name}/g, list[i].name);
 							tr = tr.replace(/#{phone}/g, list[i].phone);
 							tr = tr.replace(/#{address}/g, list[i].address);
+							tr = tr.replace(/#{aid}/g, list[i].aid);
 
 							$("#address-list").append(tr);
 						}
@@ -305,6 +306,25 @@
 					} else {
 						alert("Fail to load user address");
 					}
+				}
+			});
+		}
+
+		function setDefault(aid) {
+			$.ajax({
+				url: "/addresses/" + aid + "/set_default",
+				type: "POST",
+				dataType: "json",
+				success: function (json) {
+					if(json.state == 200) {
+						// Reload the address list
+						showAddressList();
+					} else {
+						alert("Fail to set default address");
+					}
+				},
+				error: function (xhr) {
+					alert("Error occurred while setting default address" + xhr.message);
 				}
 			});
 		}

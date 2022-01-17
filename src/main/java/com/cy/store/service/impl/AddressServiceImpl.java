@@ -4,8 +4,7 @@ import com.cy.store.entity.Address;
 import com.cy.store.mapper.AddressMapper;
 import com.cy.store.service.IAddressService;
 import com.cy.store.service.IDistrictService;
-import com.cy.store.service.ex.AddressCountLimitException;
-import com.cy.store.service.ex.InsertException;
+import com.cy.store.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,8 +57,8 @@ public class AddressServiceImpl implements IAddressService {
         List<Address> list = addressMapper.findByUid(uid);
         // Set unwanted properties as null to boost server performance
         for(Address address : list) {
-            address.setAid(null);
-            address.setUid(null);
+//            address.setAid(null);
+//            address.setUid(null);
             address.setProvinceCode(null);
             address.setCityCode(null);
             address.setAreaCode(null);
@@ -71,5 +70,27 @@ public class AddressServiceImpl implements IAddressService {
             address.setModifiedUser(null);
         }
         return list;
+    }
+
+    @Override
+    public void setDefault(Integer aid, Integer uid, String username) {
+        Address result = addressMapper.findByAid(aid);
+        if(result == null) {
+            throw new AddressNotFoundException("Address not exists");
+        }
+
+        if(result.getUid() != uid) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        Integer rows = addressMapper.updateNonDefault(uid);
+        if(rows < 1) {
+            throw new UpdateException("Error occurred when updating address");
+        }
+
+        rows = addressMapper.updateDefaultByAid(aid, username, new Date());
+        if(rows != 1) {
+            throw new UpdateException("Error occurred when updating address");
+        }
     }
 }
