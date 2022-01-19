@@ -337,12 +337,12 @@
 						if (json.state == 200) {
 							alert("Add to cart successfully");
 						} else {
-							alert("Error occurred while adding item to cart!" + json.message);
+							alert("Fail to add to cart!" + json.message);
 						}
 					},
 					error: function(xhr) {
-						alert("Your session has expired. Please relogin! Status: " + xhr.status);
-						location.href = "login.html";
+						alert("Error occurred while adding item to cart! Status: " + xhr.status);
+						// location.href = "login.html";
 					}
 				});
 			});

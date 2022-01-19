@@ -21,14 +21,14 @@ public class CartServiceImpl implements ICartService {
     private ProductMapper productMapper;
 
     @Override
-    public void addToCart(Integer uid, Integer pid, Integer num, String username) {
+    public void addToCart(Integer uid, Integer pid, Integer amount, String username) {
         Cart result = cartMapper.findByUidAndPid(uid, pid);
         Product product = productMapper.findById(pid);
         if(result == null) { // The product hasn't been added to cart
             Cart cart = new Cart();
             cart.setPid(pid);
             cart.setUid(uid);
-            cart.setNum(num);
+            cart.setNum(amount);
             cart.setPrice(product.getPrice());
             cart.setModifiedUser(username);
             cart.setCreatedUser(username);
@@ -38,7 +38,7 @@ public class CartServiceImpl implements ICartService {
 
             if(rows != 1) throw new InsertException();
         } else {
-            Integer newNum = num + result.getNum();
+            Integer newNum = amount + result.getNum();
             Integer rows = cartMapper.updateNumByCid(result.getCid(), newNum, username, new Date());
             if(rows != 1) throw new UpdateException();
         }
