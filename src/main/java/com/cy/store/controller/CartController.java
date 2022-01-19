@@ -2,11 +2,13 @@ package com.cy.store.controller;
 
 import com.cy.store.service.ICartService;
 import com.cy.store.util.JsonResult;
+import com.cy.store.vo.CartVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.jar.JarEntry;
 
 @RestController
@@ -20,5 +22,11 @@ public class CartController extends BaseController{
         cartService.addToCart(getUidFromSession(session),
                 pid, amount, getUsernameFromSession(session));
         return new JsonResult<>(success);
+    }
+
+    @RequestMapping({"", "/"})
+    public JsonResult<List<CartVO>> getVOByUid(HttpSession session) {
+        List<CartVO> data = cartService.getVOByUid(getUidFromSession(session));
+        return new JsonResult<>(success, data);
     }
 }

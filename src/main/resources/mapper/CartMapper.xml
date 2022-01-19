@@ -25,4 +25,12 @@
     <select id="findByUidAndPid" resultMap="CartEntityMap">
         SELECT * FROM  t_cart WHERE uid=#{uid} AND pid=#{pid}
     </select>
+
+    <select id="findVOByUid" resultType="com.cy.store.vo.CartVO">
+        SELECT cid, uid, pid, tc.price, tc.num, tp.title, tp.image, tp.price AS realPrice
+        FROM t_cart AS tc LEFT JOIN t_product AS tp ON tc.pid=tp.id
+        WHERE uid=#{uid}
+        ORDER BY tc.created_time DESC
+    </select>
+
 </mapper>
