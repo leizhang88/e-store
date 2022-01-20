@@ -255,6 +255,26 @@
 			showAddressList();
 		});
 
+		$("#btn-create-order").click(function () {
+			let aid = $("#address-list").val();
+			let cids = location.search.substr(1);
+			$.ajax({
+				url: "/orders/create",
+				type: "POST",
+				data: "aid="+aid + "&" + cids,
+				dataType: "JSON",
+				success: function (json) {
+					if (json.state == 200) {
+						location.href = "payment.html";
+						alert("Order created successfully!");
+					}
+				},
+				error: function (xhr) {
+					alert("Error occurred while creating order! " + xhr.status);
+				}
+			});
+		});
+
 		function showCartList() {
 			// console.log(location.search.substr(1));
 			$("#cart-list").empty();
