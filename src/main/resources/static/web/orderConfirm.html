@@ -21,7 +21,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
 		<link rel="stylesheet" type="text/css" href="../css/orderConfirm.css" />
 		<link rel="stylesheet" type="text/css" href="../css/cart.css" />
-		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>
+<!--		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>-->
 	</head>
 
 	<body>
@@ -249,6 +249,55 @@
 
 		</footer>
 		<!--页脚结束-->
+	<script type="text/javascript">
+		$(document).ready(function () {
+			showCartList();
+		});
+
+		function showCartList() {
+			// console.log(location.search.substr(1));
+			$("#cart-list").empty();
+			$.ajax({
+				url: "/carts/list",
+				type: "GET",
+				data: location.search.substr(1),
+				dataType: "JSON",
+				success: function (json) {
+					if(json.state == 200) {
+						let list = json.data;
+						let allCount = 0;
+						let allPrice = 0;
+						for(let i = 0; i < list.length; i++) {
+							let tr = '<tr>\n' +
+									'<td><img src="..#{image}collect.png" class="img-responsive" /></td>\n' +
+									'<td>#{title}</td>\n' +
+									'<td>¥<span>#{price}</span></td>\n' +
+									'<td>#{num}</td>\n' +
+									'<td><span>#{totalPrice}</span></td>\n' +
+									'</tr>';
+
+							tr = tr.replace(/#{image}/g, list[i].image);
+							tr = tr.replace(/#{title}/g, list[i].title);
+							tr = tr.replace(/#{price}/g, list[i].price);
+							tr = tr.replace(/#{num}/g, list[i].num);
+							tr = tr.replace(/#{totalPrice}/g, list[i].price * list[i].num);
+
+							$("#cart-list").append(tr);
+
+							allCount += list[i].num;
+							allPrice += list[i].num * list[i].price;
+						}
+						// Update num and total price on payment page
+						$("#all-count").html(allCount);
+						$("#all-price").html(allPrice);
+					}
+				},
+				error: function(xhr) {
+					alert("Error occurred while loading order info! " + xhr.status);
+				}
+			});
+		}
+	</script>
 	</body>
 
 </html>

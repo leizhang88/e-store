@@ -33,11 +33,18 @@
         ORDER BY tc.created_time DESC
     </select>
 
-<!--    <select id="findByCid">-->
-<!--        UPDATE t_cart SET num=#{num}, modified_user=#{modifiedUser}, modified_time=#{modifiedTime}-->
-<!--        WHERE cid=#{cid}-->
-
     <select id="findByCid" resultMap="CartEntityMap">
         SELECT * FROM t_cart WHERE cid=#{cid}
+    </select>
+
+    <select id="findVOByCid" resultType="com.cy.store.vo.CartVO">
+        SELECT cid, uid, pid, tc.price, tc.num, tp.title, tp.image, tp.price AS realPrice
+        FROM t_cart AS tc LEFT JOIN t_product AS tp ON tc.pid=tp.id
+        WHERE cid IN (
+            <foreach collection="array" item="cid" separator=",">
+                #{cid}
+            </foreach>
+            )
+        ORDER BY tc.created_time DESC
     </select>
 </mapper>

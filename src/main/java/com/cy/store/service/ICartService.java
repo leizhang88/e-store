@@ -26,4 +26,6 @@ public interface ICartService {
     Integer addNum(Integer cid, Integer uid, String username);
 
     Integer reduceNum(Integer cid, Integer uid, String username);
+
+    List<CartVO> getVOByCid(Integer uid, Integer[] cids);
 }
