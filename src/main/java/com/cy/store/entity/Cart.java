@@ -1,8 +1,9 @@
 package com.cy.store.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Cart extends BaseEntity{
+public class Cart extends BaseEntity implements Serializable {
     private Integer cid;
     private Integer uid;
     private Integer pid;

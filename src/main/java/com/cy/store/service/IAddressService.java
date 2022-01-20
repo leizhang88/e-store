@@ -24,4 +24,6 @@ public interface IAddressService {
      * @param username The user who does the job
      */
     void delete(Integer aid, Integer uid, String username);
+
+    Address getByAid(Integer aid, Integer uid);
 }
