@@ -1,10 +1,12 @@
 package com.cy.store.service.impl;
 
+import com.cy.store.controller.ex.CartNotFoundException;
 import com.cy.store.entity.Cart;
 import com.cy.store.entity.Product;
 import com.cy.store.mapper.CartMapper;
 import com.cy.store.mapper.ProductMapper;
 import com.cy.store.service.ICartService;
+import com.cy.store.service.ex.AccessDeniedException;
 import com.cy.store.service.ex.InsertException;
 import com.cy.store.service.ex.UpdateException;
 import com.cy.store.vo.CartVO;
@@ -49,5 +51,42 @@ public class CartServiceImpl implements ICartService {
     @Override
     public List<CartVO> getVOByUid(Integer uid) {
         return cartMapper.findVOByUid(uid);
+    }
+
+    @Override
+    public Integer addNum(Integer cid, Integer uid, String username) {
+        Cart result = cartMapper.findByCid(cid);
+        if(result == null) {
+            throw new CartNotFoundException();
+        }
+        if(!result.getUid().equals(uid)) {
+            throw new AccessDeniedException();
+        }
+
+        Integer num = result.getNum() + 1;
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+        if(rows != 1) {
+            throw new UpdateException();
+        }
+        return num;
+    }
+
+    @Override
+    public Integer reduceNum(Integer cid, Integer uid, String username) {
+        Cart result = cartMapper.findByCid(cid);
+        if(result == null) {
+            throw new CartNotFoundException();
+        }
+        if(!result.getUid().equals(uid)) {
+            throw new AccessDeniedException();
+        }
+
+        Integer num = result.getNum() - 1;
+        if(num < 0) num = 0;
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+        if(rows != 1) {
+            throw new UpdateException();
+        }
+        return num;
     }
 }

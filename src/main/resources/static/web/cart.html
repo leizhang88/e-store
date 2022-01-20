@@ -289,9 +289,9 @@
 									'<td>#{title}#{msg}</td>\n' +
 									'<td>¥<span id="goodsPrice#{cid}">#{unitPrice}</span></td>\n' +
 									'<td>\n' +
-									'<input id="price-#{cid}" type="button" value="-" class="num-btn" onclick="reduceNum(1)" />\n' +
+									'<input id="price-#{cid}" type="button" value="-" class="num-btn" onclick="reduceNum(#{cid})" />\n' +
 									'<input id="goodsCount#{cid}" type="text" size="2" readonly="readonly" class="num-text" value="#{num}">\n' +
-									'<input id="price+#{cid}" class="num-btn" type="button" value="+" onclick="addNum(1)" />\n' +
+									'<input id="price+#{cid}" class="num-btn" type="button" value="+" onclick="addNum(#{cid})" />\n' +
 									'</td>\n' +
 									'<td><span id="goodsCast#{cid}">#{totalPrice}</span></td>\n' +
 									'<td>\n' +
@@ -312,6 +312,48 @@
 					},
 					error: function(xhr) {
 						alert("Error occurred while loading cart info! " + xhr.status);
+					}
+				});
+			}
+
+			function addNum(cid) {
+				$.ajax({
+					url: "/carts/" + cid + "/num/add",
+					type: "POST",
+					dataType: "JSON",
+					success: function (json) {
+						if(json.state == 200) {
+							$("#goodsCount" + cid).val(json.data);
+							let price = $("#goodsPrice" + cid).html();
+							let totalPrice = price * json.data;
+							$("#goodsCast" + cid).html(totalPrice);
+						} else {
+							alert("Fail to edit product number");
+						}
+					},
+					error: function(xhr) {
+						alert("Error occurred while editing product number! " + xhr.status);
+					}
+				});
+			}
+
+			function reduceNum(cid) {
+				$.ajax({
+					url: "/carts/" + cid + "/num/reduce",
+					type: "POST",
+					dataType: "JSON",
+					success: function (json) {
+						if(json.state == 200) {
+							$("#goodsCount" + cid).val(json.data);
+							let price = $("#goodsPrice" + cid).html();
+							let totalPrice = price * json.data;
+							$("#goodsCast" + cid).html(totalPrice);
+						} else {
+							alert("Fail to edit product number");
+						}
+					},
+					error: function(xhr) {
+						alert("Error occurred while editing product number! " + xhr.status);
 					}
 				});
 			}
