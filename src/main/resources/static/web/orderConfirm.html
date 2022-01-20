@@ -252,6 +252,7 @@
 	<script type="text/javascript">
 		$(document).ready(function () {
 			showCartList();
+			showAddressList();
 		});
 
 		function showCartList() {
@@ -294,6 +295,37 @@
 				},
 				error: function(xhr) {
 					alert("Error occurred while loading order info! " + xhr.status);
+				}
+			});
+		}
+
+		function showAddressList() {
+			$("#address-list").empty();
+			$.ajax({
+				url: "/addresses",
+				type: "GET",
+				dataType: "JSON",
+				success: function (json) {
+					if(json.state == 200) {
+						let list = json.data;
+						for(let i = 0; i < list.length; i++) {
+							let opt = '<option value="#{aid}">#{name}&nbsp;&nbsp;&nbsp;#{tag}&nbsp;&nbsp;&nbsp;' +
+									'#{provinceName}#{cityName}#{areaName}#{address}&nbsp;&nbsp;&nbsp;#{phone}</option>';
+							opt = opt.replace(/#{aid}/g, list[i].aid);
+							opt = opt.replace(/#{name}/g, list[i].name);
+							opt = opt.replace(/#{tag}/g, list[i].tag);
+							opt = opt.replace(/#{provinceName}/g, list[i].provinceName);
+							opt = opt.replace(/#{cityName}/g, list[i].cityName);
+							opt = opt.replace(/#{areaName}/g, list[i].areaName);
+							opt = opt.replace(/#{address}/g, list[i].address);
+							opt = opt.replace(/#{phone}/g, list[i].phone);
+
+							$("#address-list").append(opt);
+						}
+					}
+				},
+				error: function(xhr) {
+					alert("Error occurred while loading order address! " + xhr.status);
 				}
 			});
 		}
