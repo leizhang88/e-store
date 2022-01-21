@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a full-stack e-store application built on Spring Boot framework, using MyBatis to access MySQL database via SQL.
+This is an e-store application built on Spring Boot framework, using MyBatis to access MySQL database via SQL.
 
 ## Features
 
@@ -19,8 +19,6 @@ This is a full-stack e-store application built on Spring Boot framework, using M
 - MyBatis
 - MySQL
 - Maven
-- Bootstrap
-- CSS
 - JQuery
 
 ## Database Schema
