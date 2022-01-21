@@ -22,3 +22,6 @@ This is a full-stack e-store application built on Spring Boot framework, using M
 - Bootstrap
 - CSS
 - JQuery
+
+## Database Schema
+![](./img/store_schema.png)
