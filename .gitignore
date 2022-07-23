@@ -17,3 +17,7 @@ buildNumber.properties
 *.iml
 out
 gen
+
+# misc
+.DS_Store
+/mysql
