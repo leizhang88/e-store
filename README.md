@@ -10,6 +10,7 @@ A full-stack web application built with Java Spring Boot and a MySQL database ac
 - User address management
 - Session-based cart management and order generation
 
+
 ## Data model
 ![data model](./img/data-model.png)
 
